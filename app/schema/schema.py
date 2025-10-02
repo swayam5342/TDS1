@@ -6,6 +6,9 @@ class Attachment(BaseModel):
     name: str
     url: str
 
+class TaskResponse(BaseModel):
+    usercode: str
+
 class TaskRequest(BaseModel):
     email: str
     task: str
@@ -16,9 +19,6 @@ class TaskRequest(BaseModel):
     evaluation_url: str
     attachments: Optional[List[Attachment]] = []
     signature: str
-
-class TaskResponse(BaseModel):
-    usercode: str
 
 
 class EvaluationRequest(BaseModel):

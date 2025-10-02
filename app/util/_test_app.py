@@ -1,5 +1,5 @@
-from src.util.github import github_main
-from src.util.gen_ai import generate_project
+from app.util.github import github_main
+from app.util.gen_ai import generate_project
 import os
 from dotenv import load_dotenv
 

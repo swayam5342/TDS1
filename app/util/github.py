@@ -67,9 +67,9 @@ def create_repo_with_files(user, repo_name, files_dict, private=False, descripti
 def enable_github_pages(repo, token, user):
     url = f"https://api.github.com/repos/{user.login}/{repo.name}/pages"
     headers = {
-        "Authorization": f"Bearer {token}",  # Changed to Bearer (more modern)
+        "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28"  # Added API version
+        "X-GitHub-Api-Version": "2022-11-28"
     }
     data = {
         "source": {"branch": "main", "path": "/"}
@@ -77,15 +77,9 @@ def enable_github_pages(repo, token, user):
     
     try:
         r = requests.post(url, headers=headers, json=data)
-        r.raise_for_status()  # Raise exception for bad status codes
-        
+        r.raise_for_status()
         response_data = r.json()
-        html_url = response_data.get("html_url", "")
-        
-        print(f"\n✓ GitHub Pages enabled!") #types: ignore
-        print(f"Pages URL: {html_url}")
-        print("Note: It may take a few minutes for the site to be live.")
-        
+        html_url = response_data.get("html_url", "")        
         return html_url
         
     except requests.exceptions.HTTPError as e:

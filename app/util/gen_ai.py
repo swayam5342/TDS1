@@ -8,28 +8,9 @@ load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def generate_project(prompt):
-    """
-    Generate a web project using Gemini and save all files.
-    Works with any number of files.
-    """
-
-    full_prompt = f"""
-{prompt}
-
-Return your response as JSON with this exact structure:
-{{
-  "files": [
-    {{"name": "filename.ext", "content": "file content here"}},
-    ...
-  ]
-}}
-
-Include ALL necessary files (HTML, CSS, JS, etc.) also make the readme of the project and give it a description. Return ONLY valid JSON, no explanations.
-"""
-
     response = client.models.generate_content(
         model="gemini-2.5-flash",
-        contents=full_prompt,
+        contents=prompt,
         config={"response_mime_type": "application/json"}
     )
     try:
@@ -54,7 +35,6 @@ if __name__ == "__main__":
     prompts = [
         "Build a calculator",
     ]
-    
     for i, prompt in enumerate(prompts):
         print(f"\n{'='*60}")
         print(f"Generating project {i+1}: {prompt[:50]}...")
