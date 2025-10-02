@@ -8,8 +8,9 @@ def create_repo_with_files(user, repo_name, files_dict, private=False, descripti
         repo = user.create_repo(
             name=repo_name,
             description=description,
-            private=private,
-            auto_init=True
+            private=False,
+            auto_init=True,
+            license_template="mit"
         )
         print(f"Repository created: {repo.html_url}")
         time.sleep(2)
@@ -116,7 +117,6 @@ def github_main(token, repo_name, files, des, enable_pages=True):
     pages_url = ""
     if enable_pages:
         pages_url = enable_github_pages(repo, token, user)
-    
     return commit_sha, pages_url, repo.html_url
 
 

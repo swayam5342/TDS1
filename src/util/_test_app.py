@@ -1,5 +1,5 @@
-from github_repo import github_main
-from gen_gemini import generate_project
+from src.util.github import github_main
+from src.util.gen_ai import generate_project
 import os
 from dotenv import load_dotenv
 

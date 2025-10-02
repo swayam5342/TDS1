@@ -24,7 +24,7 @@ Return your response as JSON with this exact structure:
   ]
 }}
 
-Include ALL necessary files (HTML, CSS, JS, etc.). Return ONLY valid JSON, no explanations.
+Include ALL necessary files (HTML, CSS, JS, etc.) also make the readme of the project and give it a description. Return ONLY valid JSON, no explanations.
 """
 
     response = client.models.generate_content(
@@ -40,6 +40,7 @@ Include ALL necessary files (HTML, CSS, JS, etc.). Return ONLY valid JSON, no ex
         with open("error/raw_response.txt", "w", encoding="utf-8") as f:
             f.write(str(response.text))
         return {}
+    
     files = {}
     for file_data in data.get('files', []):
         filename = file_data.get('name', f'file_{len(files)}.txt')
