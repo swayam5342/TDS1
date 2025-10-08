@@ -11,6 +11,7 @@ class TaskResponse(BaseModel):
 
 class TaskRequest(BaseModel):
     email: str
+    secret: str
     task: str
     round: int
     nonce: str
@@ -18,7 +19,6 @@ class TaskRequest(BaseModel):
     checks: List[str]
     evaluation_url: str
     attachments: Optional[List[Attachment]] = []
-    signature: str
 
 
 class EvaluationRequest(BaseModel):

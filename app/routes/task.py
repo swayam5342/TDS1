@@ -11,7 +11,7 @@ task_router = APIRouter()
 secrate=os.getenv("Secrate")
 @task_router.post("/tasks", response_model=TaskResponse)
 def create_task(task: TaskRequest, background_tasks: BackgroundTasks) -> TaskResponse:  # Add BackgroundTasks as dependency
-    if task.signature == secrate:
+    if task.secret == secrate:
         background_tasks.add_task(task_controller, task)  # Use the injected instance
         return TaskResponse(usercode=secrate) #type: ignore
     else:

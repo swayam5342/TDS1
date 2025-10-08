@@ -1,7 +1,8 @@
-from app.util.github import github_main
+from app.util.github import create_repo, upload_files, enable_github_pages
 from app.util.gen_ai import generate_project
-from app.util.prompt_1 import prompt_1
+from app.util.prompt import prompt_1
 from app.schema.schema import TaskRequest
+from github import Auth,Github
 import os
 from dotenv import load_dotenv
 import httpx
@@ -10,17 +11,26 @@ load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN not found in environment variables")
+
+
+auth = Auth.Token(GITHUB_TOKEN)
+gh = Github(auth=auth)  #type: ignore
+user = gh.get_user()
 def task_1_controller(task: TaskRequest):
     prompt = task.brief
     files = generate_project(prompt_1(prompt))
+    print(f"Generated {len(files)} files for task: {task.task}")
     if not files:
         print("No files generated.")
         return
-    commit_sha, pages_url, repo_url = github_main(GITHUB_TOKEN,"hdfbdzXffdbfh", files, private=False, description="Generated repo") #type: ignore
-    if not repo_url:
-        print("Failed to create GitHub repository.")
+    try:
+        repo = create_repo(user, task.task, "Generated repo")
+        commit_sha = upload_files(repo, files)
+        pages_url = enable_github_pages(repo, GITHUB_TOKEN, user)
+        print(f"GitHub Pages URL: {pages_url}")
+    except Exception as e:
+        print(f"GitHub operation failed: {e}")
         return
-    print(f"Repository created at: {repo_url}")
     try:
         response = httpx.post(
             task.evaluation_url,
@@ -29,7 +39,7 @@ def task_1_controller(task: TaskRequest):
                 "task": task.task,
                 "round": task.round,
                 "nonce": task.nonce,
-                "repo_url": repo_url,
+                "repo_url": repo.html_url,
                 "commit_sha": commit_sha,
                 "pages_url": pages_url
             },
