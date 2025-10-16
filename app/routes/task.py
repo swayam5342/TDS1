@@ -8,11 +8,11 @@ load_dotenv()
 task_router = APIRouter()
 
 
-secrate=os.getenv("Secrate")
+secret = os.getenv("Secret")
 @task_router.post("/tasks", response_model=TaskResponse)
-def create_task(task: TaskRequest, background_tasks: BackgroundTasks) -> TaskResponse:  # Add BackgroundTasks as dependency
-    if task.secret == secrate:
-        background_tasks.add_task(task_controller, task)  # Use the injected instance
-        return TaskResponse(usercode=secrate) #type: ignore
+def create_task(task: TaskRequest, background_tasks: BackgroundTasks) -> TaskResponse:
+    if task.secret == secret:
+        background_tasks.add_task(task_controller, task)
+        return TaskResponse(usercode=secret) #type: ignore
     else:
         raise HTTPException(status_code=403, detail="Forbidden")

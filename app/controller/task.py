@@ -32,7 +32,7 @@ def task_1_controller(task: TaskRequest):
         print(f"GitHub operation failed: {e}")
         return
     try:
-        response = httpx.post(
+        response = httpx.post( 
             task.evaluation_url,
             json={
                 "email": task.email,
@@ -50,11 +50,15 @@ def task_1_controller(task: TaskRequest):
     except httpx.HTTPError as e:
         print(f"Failed to notify evaluation endpoint: {e}")
 
-
+def task_2_controller(task: TaskRequest):
+    print(task.round)
+    ...
 
 def task_controller(task: TaskRequest):
     print(task)
     if task.round == 1:
         task_1_controller(task)
+    elif task.round ==2:
+        task_2_controller(task)
     else:
         print(f"Unknown task: {task.task}")
