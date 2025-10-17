@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional,List
 
 
-class Attachment(BaseModel):
+class Data(BaseModel):
     name: str
     url: str
 
@@ -18,7 +18,7 @@ class TaskRequest(BaseModel):
     brief: str
     checks: List[str]
     evaluation_url: str
-    attachments: Optional[List[Attachment]] = []
+    attachments: Optional[List[Data]] = []
 
 
 class EvaluationRequest(BaseModel):

@@ -8,11 +8,12 @@ load_dotenv()
 task_router = APIRouter()
 
 
-secret = os.getenv("Secret")
+secret = os.getenv("s")
 @task_router.post("/tasks", response_model=TaskResponse)
 def create_task(task: TaskRequest, background_tasks: BackgroundTasks) -> TaskResponse:
     if task.secret == secret:
         background_tasks.add_task(task_controller, task)
         return TaskResponse(usercode=secret) #type: ignore
     else:
+        print(secret,task.secret)
         raise HTTPException(status_code=403, detail="Forbidden")

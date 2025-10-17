@@ -4,6 +4,8 @@ import requests
 
 def upload_files(repo, files_dict):
     try:
+        if repo is None:
+            raise ValueError("Repository object is None")
         default_branch = repo.default_branch
         ref = repo.get_git_ref(f"heads/{default_branch}")
         base_commit = repo.get_git_commit(ref.object.sha)
@@ -89,6 +91,26 @@ def enable_github_pages(repo, token, user):
     except Exception as e:
         print(f"Error: {str(e)}")
         raise e
+
+
+
+def list_repo_files(repo):
+    """List all files in repository with their paths."""
+    try:
+        contents = repo.get_contents("")
+        files = []
+        
+        while contents:
+            file_content = contents.pop(0)
+            if file_content.type == "dir":
+                contents.extend(repo.get_contents(file_content.path))
+            else:
+                files.append(file_content.path)
+        
+        return files
+    except Exception as e:
+        print(f"Error listing files: {e}")
+        return []
 
 if __name__ == "__main__":
     ...

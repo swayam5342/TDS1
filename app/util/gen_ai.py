@@ -7,7 +7,24 @@ load_dotenv()
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
+def generate_prompt(prompt):
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config={"response_mime_type": "application/json"}
+    )  
+    return response.text
+
 def generate_project(prompt):
+    prompt +="""
+    Return your response as JSON with this exact structure:
+        {{
+          "files": [
+            {{"name": "filename.ext", "content": "file content here"}},
+            ...
+          ]
+        }}
+    """
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=prompt,
@@ -32,16 +49,4 @@ def generate_project(prompt):
 
 
 if __name__ == "__main__":
-    prompts = [
-        "Build a calculator",
-    ]
-    for i, prompt in enumerate(prompts):
-        print(f"\n{'='*60}")
-        print(f"Generating project {i+1}: {prompt[:50]}...")
-        print('='*60)
-        files = generate_project(prompt)
-        for filename, content in files.items():
-            filepath = os.path.join("generated_project", filename)
-            with open(filepath, "w", encoding="utf-8") as f:
-                f.write(content)
-            print(f"✓ Saved: {filepath}")
+    ...
