@@ -15,5 +15,4 @@ def create_task(task: TaskRequest, background_tasks: BackgroundTasks) -> TaskRes
         background_tasks.add_task(task_controller, task)
         return TaskResponse(usercode=secret) #type: ignore
     else:
-        print(secret,task.secret)
         raise HTTPException(status_code=403, detail="Forbidden")
