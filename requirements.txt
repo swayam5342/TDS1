@@ -1,0 +1,5 @@
+fastapi>=0.118.0
+google-genai>=1.39.1
+pydantic-ai>=1.0.15
+pygithub>=2.8.1
+uvicorn[standard]>=0.37.0
