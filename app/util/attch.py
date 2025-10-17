@@ -11,7 +11,6 @@ def process_attachments(attachments: List[Data]) -> str:
             try:
                 _, encoded_data = url.split(',', 1)
             except ValueError:
-                print(f"Error: Invalid data URI format for {name}")
                 continue
             try:
                 decoded_content = base64.b64decode(encoded_data).decode('utf-8')
@@ -23,6 +22,6 @@ def process_attachments(attachments: List[Data]) -> str:
                     f"----------------------\n"
                 )
             except Exception as e:
-                print(f"Error decoding attachment {name}: {e}")
+                continue
                 
     return "\n".join(processed_data)

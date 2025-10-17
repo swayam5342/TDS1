@@ -33,12 +33,7 @@ def generate_project(prompt):
     try:
         data = json.loads(response.text) #type: ignore
     except json.JSONDecodeError as e:
-        print(f"❌ JSON parsing error: {e}")
-        print(f"Raw response:\n{response.text}")
-        with open("error/raw_response.txt", "w", encoding="utf-8") as f:
-            f.write(str(response.text))
         return {}
-    
     files = {}
     for file_data in data.get('files', []):
         filename = file_data.get('name', f'file_{len(files)}.txt')

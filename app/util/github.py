@@ -12,7 +12,6 @@ def upload_files(repo, files_dict):
         base_tree = base_commit.tree
         tree_elements = []
         for file_path, content in files_dict.items():
-            print(f"Creating blob for: {file_path}")
             if isinstance(content, str):
                 blob = repo.create_git_blob(content, "utf-8")
             else:
@@ -32,20 +31,15 @@ def upload_files(repo, files_dict):
             parents=[base_commit]
         )
         ref.edit(sha=commit.sha)
-        print(f"Repository URL: {repo.html_url}")
-        print(f"Commit SHA: {commit.sha}")
         return commit.sha
     except GithubException as e:
-        print(f"Error: {e.status} - {e.data}")
         raise
     except Exception as e:
-        print(f"Error: {str(e)}")
         raise
 
 
 def create_repo(user, repo_name, description=""):
     try:
-        print(f"Creating repository: {repo_name}")
         repo = user.create_repo(
             name=repo_name,
             description=description,
@@ -53,13 +47,10 @@ def create_repo(user, repo_name, description=""):
             auto_init=True,
             license_template="mit"
         )
-        print(f"Repository created: {repo.html_url}")
         return repo
     except GithubException as e:
-        print(f"Error: {e.status} - {e.data}")
         raise
     except Exception as e:
-        print(f"Error: {str(e)}")
         raise
 
 
@@ -82,14 +73,10 @@ def enable_github_pages(repo, token, user):
         
     except requests.exceptions.HTTPError as e:
         if r.status_code == 409: #type: ignore
-            print("GitHub Pages is already enabled for this repository")
             return f"https://{user.login}.github.io/{repo.name}/"
         else:
-            print(f"Error enabling GitHub Pages: {e}")
-            print(f"Response: {r.text}") #type: ignore
             raise
     except Exception as e:
-        print(f"Error: {str(e)}")
         raise e
 
 
@@ -109,7 +96,6 @@ def list_repo_files(repo):
         
         return files
     except Exception as e:
-        print(f"Error listing files: {e}")
         return []
 
 if __name__ == "__main__":

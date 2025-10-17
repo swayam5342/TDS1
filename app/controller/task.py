@@ -22,13 +22,12 @@ gh = Github(auth=auth)  #type: ignore
 user = gh.get_user()
 
 def task_controller(task: TaskRequest):
-    print(task)
     if task.round == 1:
         task_1_controller(task)
     elif task.round ==2:
         task_2_controller(task)
     else:
-        print(f"Unknown task: {task.task}")
+        ...
 
 
 
@@ -68,16 +67,12 @@ def task_1_controller(task: TaskRequest, max_retries: int = 3):
             repo = create_repo(user,repo_name, "Generated repo")
             commit_sha = upload_files(repo, files)
             pages_url = enable_github_pages(repo, GITHUB_TOKEN, user)
-            print(f"GitHub Pages URL: {pages_url}")
         except Exception as e:
-            print(f"GitHub operation failed: {e}")
             if attempt < max_retries - 1:
                 delay = 2 ** attempt
-                print(f"Retrying in {delay} seconds...")
                 time.sleep(delay)
                 continue
             else:
-                print("All attempts exhausted. GitHub operations failed.")
                 return
         time.sleep(5)
         break
@@ -118,7 +113,6 @@ def task_1_controller(task: TaskRequest, max_retries: int = 3):
                 )
                 
         except httpx.HTTPError as e:
-            print(f"Failed to notify evaluation endpoint: {e}")
             if submit_attempt < max_retries - 1:
                 delay = 2 ** submit_attempt
                 time.sleep(delay)
@@ -126,7 +120,6 @@ def task_1_controller(task: TaskRequest, max_retries: int = 3):
             return
         if attempt < max_retries - 1:
             delay = 2 ** attempt
-            print(f"Regenerating project in {delay} seconds...")
             time.sleep(delay)
         break
 
@@ -176,14 +169,11 @@ def task_2_controller(task: TaskRequest, max_retries: int = 3):
         try:
             commit_sha = upload_files(repo, files)
         except Exception as e:
-            print(f"GitHub operation failed: {e}")
             if attempt < max_retries - 1:
                 delay = 2 ** attempt
-                print(f"Retrying in {delay} seconds...")
                 time.sleep(delay)
                 continue
             else:
-                print("All attempts exhausted. GitHub operations failed.")
                 return
         time.sleep(10)
         break
@@ -224,7 +214,6 @@ def task_2_controller(task: TaskRequest, max_retries: int = 3):
                 )
                 
         except httpx.HTTPError as e:
-            print(f"Failed to notify evaluation endpoint: {e}")
             if submit_attempt < max_retries - 1:
                 delay = 2 ** submit_attempt
                 time.sleep(delay)
@@ -232,6 +221,5 @@ def task_2_controller(task: TaskRequest, max_retries: int = 3):
             return
         if attempt < max_retries - 1:
             delay = 2 ** attempt
-            print(f"Regenerating project in {delay} seconds...")
             time.sleep(delay)
         break
